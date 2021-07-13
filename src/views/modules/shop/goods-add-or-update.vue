@@ -16,17 +16,17 @@
     <el-form-item label="商品质量" prop="goodsWeight">
       <el-input v-model="dataForm.goodsWeight" placeholder="商品质量"></el-input>
     </el-form-item>
-      <el-form-item label="商品图标" prop="goodsLogo">
-        <el-upload
-          class="avatar-uploader"
-          :action="url"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload">
-          <img v-if="dataForm.goodsLogo" :src="dataForm.goodsLogo" class="avatar" alt="商品图标">
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>
-      </el-form-item>
+    <el-form-item label="商品图标" prop="goodsLogo">
+      <el-upload
+        class="avatar-uploader"
+        :action="url"
+        :show-file-list="false"
+        :on-success="handleAvatarSuccess"
+        :before-upload="beforeAvatarUpload">
+        <img v-if="dataForm.goodsLogo" :src="dataForm.goodsLogo" class="avatar" alt="商品图标">
+        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+      </el-upload>
+    </el-form-item>
     <el-form-item label="热门数" prop="hotNumber">
       <el-input v-model="dataForm.hotNumber" placeholder="热门数"></el-input>
     </el-form-item>
@@ -52,7 +52,7 @@
               v-model="dataForm.goodsIntroduce"
               ref="myQuillEditor"
               :options="editorOption"
-              :style="{ height: '300px',width: '100%' }"
+              :style="{ height: '200px',width: '100%' }"
               @change="onEditorChange($event)"
             >
             </quill-editor>
@@ -68,7 +68,53 @@
   </el-dialog>
 </template>
 
+<style>
+
+/*avatar 为商品LOGO信息*/
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.avatar-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
+</style>
+
 <script>
+  const toolbarOptions = [
+    ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+    [{'header': 1}, {'header': 2}],               // custom button values
+    [{'list': 'ordered'}, {'list': 'bullet'}],
+    [{'indent': '-1'}, {'indent': '+1'}],          // outdent/indent
+    [{'direction': 'rtl'}],                         // text direction
+    [{'size': ['small', false, 'large', 'huge']}],  // custom dropdown
+    [{'header': [1, 2, 3, 4, 5, 6, false]}],
+    [{'color': []}, {'background': []}],          // dropdown with defaults from theme
+    [{'font': []}],
+    [{'align': []}],
+    ['link', 'image'],
+    ['clean']
+
+  ]
   export default {
     data () {
       return {
@@ -83,8 +129,9 @@
           hotNumber: '',
           catOneId: '',
           catTwoId: '',
-          goodsIntroduce: ''
+          goodsIntroduce: null
         },
+        url: '',
         dataRule: {
           goodsName: [
             { required: true, message: '商品名称不能为空', trigger: 'blur' }
@@ -98,11 +145,33 @@
           goodsWeight: [
             { required: true, message: '商品质量不能为空', trigger: 'blur' }
           ]
+        },
+        quillUpdateImg: false, // 根据图片上传状态来确定是否显示loading动画，刚开始是false,不显示
+        content: null,
+        editorOption: {
+          placeholder: '',
+          theme: 'snow',  // or 'bubble'
+          modules: {
+            toolbar: {
+              container: toolbarOptions,
+              handlers: {
+                'image': function (value) {
+                  if (value) {
+                    // 触发input框选择图片文件
+                    document.querySelector('.img-uploader input').click()
+                  } else {
+                    this.quill.format('image', false)
+                  }
+                }
+              }
+            }
+          }
         }
       }
     },
     methods: {
       init (id) {
+        this.url = this.$http.adornUrl(`/sys/oss/upload?token=${this.$cookie.get('token')}`)
         this.dataForm.goodsId = id || 0
         this.visible = true
         this.$nextTick(() => {
