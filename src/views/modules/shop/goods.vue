@@ -23,12 +23,6 @@
         width="50">
       </el-table-column>
       <el-table-column
-        prop="goodsId"
-        header-align="center"
-        align="center"
-        label="商品id">
-      </el-table-column>
-      <el-table-column
         prop="goodsName"
         header-align="center"
         align="center"
@@ -57,6 +51,9 @@
         header-align="center"
         align="center"
         label="商品图标">
+        <template slot-scope="scope">
+          <img :src="scope.row.goodsLogo" width="100" height="100" class="head_pic"/>
+        </template>
       </el-table-column>
       <el-table-column
         prop="hotNumber"
@@ -75,12 +72,6 @@
         header-align="center"
         align="center"
         label="二级类别">
-      </el-table-column>
-      <el-table-column
-        prop="goodsIntroduce"
-        header-align="center"
-        align="center"
-        label="商品介绍">
       </el-table-column>
       <el-table-column
         fixed="right"
