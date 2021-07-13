@@ -51,7 +51,7 @@
         width="150"
         label="操作">
         <template slot-scope="scope">
-          <!--<el-button type="text" size="small" @click="checkOrderDetailHandle(scope.row.orderId)">查看详情</el-button>-->
+          <el-button type="text" size="small" @click="checkOrderDetailHandle(scope.row.orderId)">查看详情</el-button>
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.orderId)">修改</el-button>
           <el-button type="text" size="small" @click="deleteHandle(scope.row.orderId)">删除</el-button>
         </template>
@@ -68,13 +68,16 @@
     </el-pagination>
     <!-- 弹窗, 新增 / 修改 -->
     <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
-    <!--<check-order-detail v-if="checkOrderDetailVisible" ref="checkOrderDetail" @refreshDataList="getDataList"></check-order-detail>-->
+    <!-- 弹窗, 查看详情-->
+    <check-order-detail v-if="checkOrderDetailVisible" ref="checkOrderDetail"
+                        @refreshDataList="getDataList"></check-order-detail>
   </div>
 </template>
 
 <script>
-  import AddOrUpdate from './orders-add-or-update'
-  //import CheckOrderDetail from './orders-detail'
+import CheckOrderDetail from './orders-detail'
+import AddOrUpdate from './orders-add-or-update'
+
   export default {
     data () {
       return {
@@ -88,12 +91,12 @@
         dataListLoading: false,
         dataListSelections: [],
         addOrUpdateVisible: false,
-        //checkOrderDetailVisible: false
+        checkOrderDetailVisible: false
       }
     },
     components: {
       AddOrUpdate,
-      //CheckOrderDetail
+      CheckOrderDetail
     },
     activated () {
       this.getDataList()
@@ -144,14 +147,14 @@
         })
       },
       // 查看详情
-      /*checkOrderDetailHandle (id) {
+      checkOrderDetailHandle(id) {
         this.checkOrderDetailVisible = true
         this.$nextTick(() => {
           this.$refs.checkOrderDetail.init(id)
         })
-      },*/
+      },
       // 删除
-      deleteHandle (id) {
+      deleteHandle(id) {
         var ids = id ? [id] : this.dataListSelections.map(item => {
           return item.orderId
         })
