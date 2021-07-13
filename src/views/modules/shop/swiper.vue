@@ -2,8 +2,12 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-button v-if="isAuth('shop:orders:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
-        <el-button v-if="isAuth('shop:orders:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+        <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button @click="getDataList()">查询</el-button>
+        <el-button v-if="isAuth('shop:swiper:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
+        <el-button v-if="isAuth('shop:swiper:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -19,36 +23,28 @@
         width="50">
       </el-table-column>
       <el-table-column
-        prop="orderId"
+        prop="sid"
         header-align="center"
         align="center"
-        label="订单id">
+        label="ID">
       </el-table-column>
       <el-table-column
-        prop="payWay"
+        prop="goodsId"
         header-align="center"
         align="center"
-        label="支付方式">
+        label="商品id">
       </el-table-column>
       <el-table-column
-        prop="orderAmount"
+        prop="imageSrc"
         header-align="center"
         align="center"
-        label="订单金额">
+        label="图片路径">
       </el-table-column>
       <el-table-column
-        prop="status"
+        prop="navigatorUrl"
         header-align="center"
         align="center"
-        label="订单状态">
-        <template slot-scope="scope">
-          <el-tag v-if="scope.row.orderState === 0" size="small" type="warning">待付款</el-tag>
-          <el-tag v-else-if="scope.row.orderState === 1" size="small">待发货</el-tag>
-          <el-tag v-else-if="scope.row.orderState === 2" size="small">已发货</el-tag>
-          <el-tag v-else-if="scope.row.orderState === 3" size="small" type="success">已完成</el-tag>
-          <el-tag v-else-if="scope.row.orderState === 4" size="small" type="info">已关闭</el-tag>
-          <el-tag v-else size="small" type="danger">无效订单</el-tag>
-        </template>
+        label="导航链接">
       </el-table-column>
       <el-table-column
         fixed="right"
@@ -57,9 +53,8 @@
         width="150"
         label="操作">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="checkOrderDetailHandle(scope.row.orderId)">查看详情</el-button>
-          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.orderId)">修改</el-button>
-          <el-button type="text" size="small" @click="deleteHandle(scope.row.orderId)">删除</el-button>
+          <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.sid)">修改</el-button>
+          <el-button type="text" size="small" @click="deleteHandle(scope.row.sid)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -74,13 +69,11 @@
     </el-pagination>
     <!-- 弹窗, 新增 / 修改 -->
     <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
-    <check-order-detail v-if="checkOrderDetailVisible" ref="checkOrderDetail" @refreshDataList="getDataList"></check-order-detail>
   </div>
 </template>
 
 <script>
-  import AddOrUpdate from './orders-add-or-update'
-  import CheckOrderDetail from './orders-detail'
+  import AddOrUpdate from './swiper-add-or-update'
   export default {
     data () {
       return {
@@ -93,13 +86,11 @@
         totalPage: 0,
         dataListLoading: false,
         dataListSelections: [],
-        addOrUpdateVisible: false,
-        checkOrderDetailVisible: false
+        addOrUpdateVisible: false
       }
     },
     components: {
-      AddOrUpdate,
-      CheckOrderDetail
+      AddOrUpdate
     },
     activated () {
       this.getDataList()
@@ -109,7 +100,7 @@
       getDataList () {
         this.dataListLoading = true
         this.$http({
-          url: this.$http.adornUrl('/shop/orders/list'),
+          url: this.$http.adornUrl('/shop/swiper/list'),
           method: 'get',
           params: this.$http.adornParams({
             'page': this.pageIndex,
@@ -149,17 +140,10 @@
           this.$refs.addOrUpdate.init(id)
         })
       },
-      // 查看详情
-      checkOrderDetailHandle (id) {
-        this.checkOrderDetailVisible = true
-        this.$nextTick(() => {
-          this.$refs.checkOrderDetail.init(id)
-        })
-      },
       // 删除
       deleteHandle (id) {
         var ids = id ? [id] : this.dataListSelections.map(item => {
-          return item.orderId
+          return item.sid
         })
         this.$confirm(`确定对[id=${ids.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`, '提示', {
           confirmButtonText: '确定',
@@ -167,7 +151,7 @@
           type: 'warning'
         }).then(() => {
           this.$http({
-            url: this.$http.adornUrl('/shop/orders/delete'),
+            url: this.$http.adornUrl('/shop/swiper/delete'),
             method: 'post',
             data: this.$http.adornData(ids, false)
           }).then(({data}) => {

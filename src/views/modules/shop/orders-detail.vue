@@ -1,20 +1,46 @@
 <template>
   <el-dialog
-    :title="!dataForm.orderId ? '新增' : '修改'"
+    :title="订单详情"
     :close-on-click-modal="false"
     :visible.sync="visible">
-    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()"
-             label-width="80px">
-      <el-form-item label="用户地址" prop="userAddress">
-        <el-input v-model="dataForm.userAddress" placeholder="用户地址"></el-input>
-      </el-form-item>
-    </el-form>
+    <el-container>
+      <el-aside width="200px">订单状态</el-aside>
+      <el-main v-model="dataForm.orderState"></el-main>
+    </el-container>
+    <el-container>
+      <el-aside width="200px">支付方式</el-aside>
+      <el-main>{{ dataForm.payWay }}</el-main>
+    </el-container>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="visible = false">取消</el-button>
-      <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
+      <el-button @click="visible = false">返回</el-button>
+
     </span>
   </el-dialog>
 </template>
+
+<style>
+
+.el-aside {
+  background-color: #D3DCE6;
+  color: #333;
+  text-align: center;
+  line-height: 60px;
+}
+
+.el-main {
+  background-color: #E9EEF3;
+  color: #333;
+  text-align: center;
+  line-height: 60px;
+}
+
+body > .el-container {
+  margin-bottom: 40px;
+}
+
+
+</style>
+
 
 <script>
 export default {
@@ -30,26 +56,6 @@ export default {
         userName: '',
         userTel: '',
         userAddress: ''
-      },
-      dataRule: {
-        orderState: [
-          {required: true, message: '订单状态：0->待付款；1->待发货；2->已发货；3->已完成；4->已关闭；5->无效订单不能为空', trigger: 'blur'}
-        ],
-        orderAmount: [
-          {required: true, message: '订单金额不能为空', trigger: 'blur'}
-        ],
-        userId: [
-          {required: true, message: '用户ID不能为空', trigger: 'blur'}
-        ],
-        userName: [
-          {required: true, message: '用户名不能为空', trigger: 'blur'}
-        ],
-        userTel: [
-          {required: true, message: '用户电话不能为空', trigger: 'blur'}
-        ],
-        userAddress: [
-          {required: true, message: '用户地址不能为空', trigger: 'blur'}
-        ]
       }
     }
   },
@@ -73,41 +79,6 @@ export default {
               this.dataForm.userName = data.orders.userName
               this.dataForm.userTel = data.orders.userTel
               this.dataForm.userAddress = data.orders.userAddress
-            }
-          })
-        }
-      })
-    },
-    // 表单提交
-    dataFormSubmit() {
-      this.$refs['dataForm'].validate((valid) => {
-        if (valid) {
-          this.$http({
-            url: this.$http.adornUrl(`/shop/orders/${!this.dataForm.orderId ? 'save' : 'update'}`),
-            method: 'post',
-            data: this.$http.adornData({
-              'orderId': this.dataForm.orderId || undefined,
-              'orderState': this.dataForm.orderState,
-              'payWay': this.dataForm.payWay,
-              'orderAmount': this.dataForm.orderAmount,
-              'userId': this.dataForm.userId,
-              'userName': this.dataForm.userName,
-              'userTel': this.dataForm.userTel,
-              'userAddress': this.dataForm.userAddress
-            })
-          }).then(({data}) => {
-            if (data && data.code === 0) {
-              this.$message({
-                message: '操作成功',
-                type: 'success',
-                duration: 1500,
-                onClose: () => {
-                  this.visible = false
-                  this.$emit('refreshDataList')
-                }
-              })
-            } else {
-              this.$message.error(data.msg)
             }
           })
         }
