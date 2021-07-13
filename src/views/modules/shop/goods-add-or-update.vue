@@ -33,9 +33,7 @@
     <el-form-item label="一级类别" prop="catOneId">
       <el-input v-model="dataForm.catOneId" placeholder="一级类别"></el-input>
     </el-form-item>
-    <el-form-item label="二级类别" prop="catTwoId">
-      <el-input v-model="dataForm.catTwoId" placeholder="二级类别"></el-input>
-    </el-form-item>
+
       <el-form-item label="商品介绍" prop="goodsIntroduce">
         <template>
           <div>
@@ -59,6 +57,9 @@
           </div>
         </template>
 
+      </el-form-item>
+      <el-form-item label="二级类别" prop="catTwoId">
+        <el-input v-model="dataForm.catTwoId" placeholder="二级类别"></el-input>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
