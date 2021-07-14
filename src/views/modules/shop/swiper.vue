@@ -44,12 +44,6 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="navigatorUrl"
-        header-align="center"
-        align="center"
-        label="导航链接">
-      </el-table-column>
-      <el-table-column
         fixed="right"
         header-align="center"
         align="center"

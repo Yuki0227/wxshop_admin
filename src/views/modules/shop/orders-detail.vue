@@ -2,7 +2,10 @@
   <el-dialog
     :title="'订单详情'"
     :close-on-click-modal="false"
-    :visible.sync="visible">
+    :visible.sync="visible"
+    :data="dataList"
+    border
+    v-loading="dataListLoading">
     <div :model="dataForm" :rules="dataRule" ref="dataForm">
       <el-row>
         <el-col :span="6" class="table-cell-title">订单编号</el-col>
@@ -29,6 +32,26 @@
         <el-col :span="6" class="table-cell">{{dataForm.userAddress}}</el-col>
       </el-row>
     </div>
+    <el-table
+      :data="dataList"
+      border
+      v-loading="dataListLoading"
+      style="width: 100%;">
+
+      <el-table-column
+        prop="orderId"
+        header-align="center"
+        align="center"
+        label="商品id">
+      </el-table-column>
+      <el-table-column
+        prop="orderId"
+        header-align="center"
+        align="center"
+        label="商品名称">
+      </el-table-column>
+
+    </el-table>
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm">
 
     </el-form>
@@ -52,8 +75,16 @@ export default {
         userName: '',
         userTel: '',
         userAddress: ''
-      }
-
+      },
+      dataForm2: {
+        key: ''
+      },
+      dataList: [],
+      pageIndex: 1,
+      pageSize: 10,
+      totalPage: 0,
+      dataListLoading: false,
+      dataListSelections: []
     }
   },
   methods: {
@@ -78,8 +109,26 @@ export default {
               this.dataForm.userAddress = data.orders.userAddress
             }
           })
+          this.$http({
+            url: this.$http.adornUrl(`/shop/orderitem/info/${this.dataForm.orderId}`),
+            method: 'get',
+            params: this.$http.adornParams()
+          }).then(({data}) => {
+            console.log(data)
+          })
         }
       })
+    },
+    // 每页数
+    sizeChangeHandle (val) {
+      this.pageSize = val
+      this.pageIndex = 1
+      this.getDataList()
+    },
+    // 当前页
+    currentChangeHandle (val) {
+      this.pageIndex = val
+      this.getDataList()
     }
   }
 }
