@@ -57,6 +57,7 @@
         :show-overflow-tooltip="true"
         label="菜单URL">
       </el-table-column>
+
       <el-table-column
         prop="perms"
         header-align="center"
