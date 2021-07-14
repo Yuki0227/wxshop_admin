@@ -49,7 +49,6 @@
         align="center"
         label="排序号">
       </el-table-column>
-
       <el-table-column
         prop="url"
         header-align="center"
