@@ -6,6 +6,7 @@
     :data="dataList"
     border
     v-loading="dataListLoading">
+    <el-tag>订单详细信息</el-tag>
     <div :model="dataForm" :rules="dataRule" ref="dataForm">
       <el-row>
         <el-col :span="6" class="table-cell-title">订单编号</el-col>
@@ -14,10 +15,10 @@
         <el-col :span="6" class="table-cell-title">支付方式</el-col>
       </el-row>
       <el-row>
-        <el-col :span="6" class="table-cell">{{dataForm.orderId}}</el-col>
-        <el-col :span="6" class="table-cell">{{dataForm.orderState}}</el-col>
-        <el-col :span="6" class="table-cell">{{dataForm.orderAmount}}</el-col>
-        <el-col :span="6" class="table-cell">{{dataForm.payWay}}</el-col>
+        <el-col :span="6" class="table-cell" style="color: #00a0e9">{{dataForm.orderId}}</el-col>
+        <el-col :span="6" class="table-cell" style="color: #00a0e9">{{dataForm.orderState}}</el-col>
+        <el-col :span="6" class="table-cell" style="color: #00a0e9">{{dataForm.orderAmount}}</el-col>
+        <el-col :span="6" class="table-cell" style="color: #00a0e9">{{dataForm.payWay}}</el-col>
       </el-row>
       <el-row>
         <el-col :span="6" class="table-cell-title">用户编号</el-col>
@@ -26,12 +27,13 @@
         <el-col :span="6" class="table-cell-title">用户地址</el-col>
       </el-row>
       <el-row>
-        <el-col :span="6" class="table-cell">{{dataForm.userId}}</el-col>
-        <el-col :span="6" class="table-cell">{{dataForm.userName}}</el-col>
-        <el-col :span="6" class="table-cell">{{dataForm.userTel}}</el-col>
-        <el-col :span="6" class="table-cell">{{dataForm.userAddress}}</el-col>
+        <el-col :span="6" class="table-cell" style="color: #00a0e9">{{dataForm.userId}}</el-col>
+        <el-col :span="6" class="table-cell" style="color: #00a0e9">{{dataForm.userName}}</el-col>
+        <el-col :span="6" class="table-cell" style="color: #00a0e9">{{dataForm.userTel}}</el-col>
+        <el-col :span="6" class="table-cell" style="color: #00a0e9">{{dataForm.userAddress}}</el-col>
       </el-row>
     </div>
+    <el-tag>包含商品</el-tag>
     <el-table
       :data="dataList"
       border
@@ -39,16 +41,31 @@
       style="width: 100%;">
 
       <el-table-column
-        prop="orderId"
+        prop="goodsLogo"
         header-align="center"
         align="center"
-        label="商品id">
+        label="商品图片">
+        <template slot-scope="scope">
+          <img :src="scope.row.goodsLogo" width="100" height="100" class="head_pic"/>
+        </template>
       </el-table-column>
       <el-table-column
-        prop="orderId"
+        prop="goodsName"
         header-align="center"
         align="center"
         label="商品名称">
+      </el-table-column>
+      <el-table-column
+        prop="goodsNumber"
+        header-align="center"
+        align="center"
+        label="商品数量">
+      </el-table-column>
+      <el-table-column
+        prop="goodsPrice"
+        header-align="center"
+        align="center"
+        label="商品单价">
       </el-table-column>
 
     </el-table>
@@ -80,14 +97,12 @@ export default {
         key: ''
       },
       dataList: [],
-      pageIndex: 1,
-      pageSize: 10,
-      totalPage: 0,
       dataListLoading: false,
       dataListSelections: []
     }
   },
   methods: {
+
     init (id) {
       this.dataForm.orderId = id || 0
       this.visible = true
@@ -113,24 +128,19 @@ export default {
             url: this.$http.adornUrl(`/shop/orderitem/list/`),
             method: 'get',
             params: this.$http.adornParams({
-              'orderId': this.dataForm.orderId
+              'orderId': id
             })
           }).then(({data}) => {
             console.log(data.page.list)
+            if (data && data.code === 0) {
+              this.dataList = data.page.list
+            } else {
+              this.dataList = []
+            }
+            this.dataListLoading = false
           })
         }
       })
-    },
-    // 每页数
-    sizeChangeHandle (val) {
-      this.pageSize = val
-      this.pageIndex = 1
-      this.getDataList()
-    },
-    // 当前页
-    currentChangeHandle (val) {
-      this.pageIndex = val
-      this.getDataList()
     }
   }
 }
