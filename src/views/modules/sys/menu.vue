@@ -116,6 +116,7 @@ export default {
         params: this.$http.adornParams()
       }).then(({data}) => {
         this.dataList = treeDataTranslate(data, 'menuId')
+        //console.log(data)
         this.dataListLoading = false
       })
     },
