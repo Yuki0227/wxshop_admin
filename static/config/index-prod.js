@@ -5,7 +5,7 @@
   window.SITE_CONFIG = {};
 
   // api接口请求地址
-  window.SITE_CONFIG['baseUrl'] = 'http://39.106.118.165:8080/wxshop';
+  window.SITE_CONFIG['baseUrl'] = 'https://wxshop.yu-yue.online:8080/wxshop';
 
   // cdn地址 = 域名 + 版本号
   window.SITE_CONFIG['domain'] = './'; // 域名
