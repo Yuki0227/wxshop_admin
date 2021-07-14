@@ -39,6 +39,9 @@
         header-align="center"
         align="center"
         label="图片路径">
+        <template slot-scope="scope">
+          <img :src="scope.row.imageSrc" width="100" height="100" class="head_pic"/>
+        </template>
       </el-table-column>
       <el-table-column
         prop="navigatorUrl"
