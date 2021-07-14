@@ -110,11 +110,13 @@ export default {
             }
           })
           this.$http({
-            url: this.$http.adornUrl(`/shop/orderitem/info/${this.dataForm.orderId}`),
+            url: this.$http.adornUrl(`/shop/orderitem/list/`),
             method: 'get',
-            params: this.$http.adornParams()
+            params: this.$http.adornParams({
+              'orderId': this.dataForm.orderId
+            })
           }).then(({data}) => {
-            console.log(data)
+            console.log(data.page.list)
           })
         }
       })
