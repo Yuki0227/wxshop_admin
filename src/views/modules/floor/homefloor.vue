@@ -2,12 +2,7 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button @click="getDataList()">查询</el-button>
         <el-button v-if="isAuth('floor:homefloor:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
-        <el-button v-if="isAuth('floor:homefloor:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
       </el-form-item>
     </el-form>
     <el-table
@@ -17,28 +12,28 @@
       @selection-change="selectionChangeHandle"
       style="width: 100%;">
       <el-table-column
-        type="selection"
-        header-align="center"
-        align="center"
-        width="50">
-      </el-table-column>
-      <el-table-column
         prop="id"
         header-align="center"
         align="center"
-        label="ID">
+        label="ID"
+        min-width="10%">
       </el-table-column>
       <el-table-column
         prop="name"
         header-align="center"
         align="center"
-        label="楼层名称">
+        label="楼层名称"
+        min-width="20%">
       </el-table-column>
       <el-table-column
         prop="imageSrc"
         header-align="center"
         align="center"
-        label="图片">
+        label="图片"
+        min-width="60%">
+        <template slot-scope="scope">
+          <img v-if="scope.row.imageSrc" :src="scope.row.imageSrc" width="700" height="50" class="head_pic"/>
+        </template>
       </el-table-column>
       <el-table-column
         fixed="right"
@@ -47,6 +42,7 @@
         width="150"
         label="操作">
         <template slot-scope="scope">
+          <router-link :to="{path:'../floor-homeflooritem',query:{setid:scope.row.id}}"><el-button type="text" size="small" @click="checkDetail(scope.row.id)">查看详情</el-button></router-link>
           <el-button type="text" size="small" @click="addOrUpdateHandle(scope.row.id)">修改</el-button>
           <el-button type="text" size="small" @click="deleteHandle(scope.row.id)">删除</el-button>
         </template>
@@ -80,11 +76,12 @@
         totalPage: 0,
         dataListLoading: false,
         dataListSelections: [],
-        addOrUpdateVisible: false
+        addOrUpdateVisible: false,
       }
     },
     components: {
       AddOrUpdate
+
     },
     activated () {
       this.getDataList()

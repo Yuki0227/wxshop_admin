@@ -2,10 +2,6 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button @click="getDataList()">查询</el-button>
         <el-button v-if="isAuth('floor:homeflooritem:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
         <el-button v-if="isAuth('floor:homeflooritem:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
       </el-form-item>
@@ -16,18 +12,6 @@
       v-loading="dataListLoading"
       @selection-change="selectionChangeHandle"
       style="width: 100%;">
-      <el-table-column
-        type="selection"
-        header-align="center"
-        align="center"
-        width="50">
-      </el-table-column>
-      <el-table-column
-        prop="id"
-        header-align="center"
-        align="center"
-        label="ID">
-      </el-table-column>
       <el-table-column
         prop="floorId"
         header-align="center"
@@ -45,6 +29,9 @@
         header-align="center"
         align="center"
         label="图片">
+        <template slot-scope="scope">
+          <img v-if="scope.row.imageSrc" :src="scope.row.imageSrc" width="100" height="100" class="head_pic"/>
+        </template>
       </el-table-column>
       <el-table-column
         prop="imageWidth"
@@ -116,6 +103,7 @@
     methods: {
       // 获取数据列表
       getDataList () {
+        console.log(this.$route.query.setid)
         this.dataListLoading = true
         this.$http({
           url: this.$http.adornUrl('/floor/homeflooritem/list'),
@@ -123,6 +111,7 @@
           params: this.$http.adornParams({
             'page': this.pageIndex,
             'limit': this.pageSize,
+            'id': this.$route.query.setid,
             'key': this.dataForm.key
           })
         }).then(({data}) => {
