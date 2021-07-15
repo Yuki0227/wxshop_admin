@@ -1,5 +1,6 @@
 <template>
-  <div class="mod-demo-echarts">
+  <div class="mod-demo-echarts"
+       :visible.sync="visible">
     <el-alert
       title="提示："
       type="warning"
@@ -41,6 +42,7 @@ import echarts from 'echarts'
 export default {
   data() {
     return {
+      visible: false,
       chartLine: null,
       chartBar: null,
       chartPie: null,
