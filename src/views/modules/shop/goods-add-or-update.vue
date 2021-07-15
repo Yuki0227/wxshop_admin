@@ -27,12 +27,12 @@
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
       </el-upload>
     </el-form-item>
-    <el-form-item label="热门数" prop="hotNumber">
-      <el-input v-model="dataForm.hotNumber" placeholder="热门数"></el-input>
-    </el-form-item>
-    <el-form-item label="一级类别" prop="catOneId">
-      <el-input v-model="dataForm.catOneId" placeholder="一级类别"></el-input>
-    </el-form-item>
+      <el-form-item label="热门数" prop="hotNumber">
+        <el-input v-model="dataForm.hotNumber" placeholder="热门数"></el-input>
+      </el-form-item>
+      <el-form-item label="类别ID" prop="catTwoId">
+        <el-input v-model="dataForm.catTwoId" placeholder="二级类别"></el-input>
+      </el-form-item>
 
       <el-form-item label="商品介绍" prop="goodsIntroduce">
         <template>
@@ -56,11 +56,13 @@
             </quill-editor>
           </div>
         </template>
+      </el-form-item>
+      <el-form-item label="" prop="">
+      </el-form-item>
+      <el-form-item label="" prop="">
+      </el-form-item>
 
-      </el-form-item>
-      <el-form-item label="二级类别" prop="catTwoId">
-        <el-input v-model="dataForm.catTwoId" placeholder="二级类别"></el-input>
-      </el-form-item>
+
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>

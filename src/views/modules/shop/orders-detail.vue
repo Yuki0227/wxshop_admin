@@ -46,7 +46,7 @@
         align="center"
         label="商品图片">
         <template slot-scope="scope">
-          <img :src="scope.row.goodsLogo" width="100" height="100" class="head_pic"/>
+          <img v-if="scope.row.goodsLogo" :src="scope.row.goodsLogo" width="100" height="100" class="head_pic"/>
         </template>
       </el-table-column>
       <el-table-column
