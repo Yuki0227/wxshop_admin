@@ -1,23 +1,20 @@
 <template>
   <el-dialog
-    :title="!dataForm.catTwoId ? '新增' : '修改'"
+    :title="!dataForm.navId ? '新增' : '修改'"
     :close-on-click-modal="false"
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
-    <el-form-item label="上级名称" prop="parentName">
-      <el-input v-model="dataForm.parentName" placeholder="上级名称"></el-input>
+    <el-form-item label="导航名称" prop="navName">
+      <el-input v-model="dataForm.navName" placeholder=""></el-input>
     </el-form-item>
-    <el-form-item label="类别名称" prop="catName">
-      <el-input v-model="dataForm.catName" placeholder="类别名称"></el-input>
-    </el-form-item>
-    <el-form-item label="类别图标" prop="catLogo">
+    <el-form-item label="导航图片" prop="navPic">
       <el-upload
         class="avatar-uploader"
         :action="url"
         :show-file-list="false"
         :on-success="handleAvatarSuccess"
         :before-upload="beforeAvatarUpload">
-        <img v-if="dataForm.catLogo" :src="dataForm.catLogo" class="avatar" alt="类别图标">
+        <img v-if="dataForm.navPic" :src="dataForm.navPic" class="avatar" alt="导航图片">
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
       </el-upload>
     </el-form-item>
@@ -61,7 +58,6 @@
 </style>
 
 <script>
-  import {treeDataTranslate} from '@/utils'
   const toolbarOptions = [
     ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
     [{'header': 1}, {'header': 2}],               // custom button values
@@ -82,19 +78,17 @@
       return {
         visible: false,
         dataForm: {
-          catTwoId: 0,
-          parentId: '',
-          catName: '',
-          catLogo: '',
-          parentName: ''
+          navId: 0,
+          navName: '',
+          navPic: ''
         },
         url: '',
         dataRule: {
-          parentId: [
-            { required: true, message: '上级ID不能为空', trigger: 'blur' }
+          navName: [
+            { required: true, message: '不能为空', trigger: 'blur' }
           ],
-          catName: [
-            { required: true, message: '类别名称不能为空', trigger: 'blur' }
+          navPic: [
+            { required: true, message: '不能为空', trigger: 'blur' }
           ]
         },
         quillUpdateImg: false, // 根据图片上传状态来确定是否显示loading动画，刚开始是false,不显示
@@ -123,32 +117,19 @@
     methods: {
       init (id) {
         this.url = this.$http.adornUrl(`/sys/oss/upload?token=${this.$cookie.get('token')}`)
-        this.dataForm.catTwoId = id || 0
+        this.dataForm.navId = id || 0
         this.visible = true
         this.$nextTick(() => {
           this.$refs['dataForm'].resetFields()
-          if (this.dataForm.catTwoId) {
+          if (this.dataForm.navId) {
             this.$http({
-              url: this.$http.adornUrl(`/shop/goodscategory/info/${this.dataForm.catTwoId}`),
+              url: this.$http.adornUrl(`/shop/nav/info/${this.dataForm.navId}`),
               method: 'get',
               params: this.$http.adornParams()
             }).then(({data}) => {
               if (data && data.code === 0) {
-                this.dataForm.parentId = data.goodsCategory.parentId
-                this.dataForm.catName = data.goodsCategory.catName
-                this.dataForm.catLogo = data.goodsCategory.catLogo
-                this.dataForm.catTwoId = data.goodsCategory.catTwoId
-              }
-            })
-            this.$http({
-              url: this.$http.adornUrl(`/shop/goodscategory/list`),
-              method: 'get',
-              params: this.$http.adornParams()
-            }).then(({data}) => {
-              this.dataList = treeDataTranslate(data, 'catTwoId', 'parentId')
-              if (data && data.code === 0) {
-                console.log(data)
-                this.dataForm.parentName = data.parentName
+                this.dataForm.navName = data.nav.navName
+                this.dataForm.navPic = data.nav.navPic
               }
             })
           }
@@ -159,13 +140,12 @@
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
             this.$http({
-              url: this.$http.adornUrl(`/shop/goodscategory/${!this.dataForm.catTwoId ? 'save' : 'update'}`),
+              url: this.$http.adornUrl(`/shop/nav/${!this.dataForm.navId ? 'save' : 'update'}`),
               method: 'post',
               data: this.$http.adornData({
-                'catTwoId': this.dataForm.catTwoId || undefined,
-                'parentId': this.dataForm.parentId,
-                'catName': this.dataForm.catName,
-                'catLogo': this.dataForm.catLogo
+                'navId': this.dataForm.navId || undefined,
+                'navName': this.dataForm.navName,
+                'navPic': this.dataForm.navPic
               })
             }).then(({data}) => {
               if (data && data.code === 0) {
@@ -186,7 +166,7 @@
         })
       },
       handleAvatarSuccess(res, file) {
-        this.dataForm.catLogo = file.response.url// URL.createObjectURL(file.raw);
+        this.dataForm.navPic = file.response.url// URL.createObjectURL(file.raw);
       },
       beforeAvatarUpload(file) {
         const isJPG = file.type === 'image/jpeg';
