@@ -30,8 +30,21 @@
       <el-form-item label="热门数" prop="hotNumber">
         <el-input v-model="dataForm.hotNumber" placeholder="热门数"></el-input>
       </el-form-item>
+      <el-form-item label="类别说明" prop="hotNumber">
+        <el-tag>类别2: 曲面电视 3: 海信 4: 夏普</el-tag>
+      </el-form-item>
       <el-form-item label="类别ID" prop="catTwoId">
-        <el-input v-model="dataForm.catTwoId" placeholder="二级类别"></el-input>
+        <template>
+
+        </template>
+        <template>
+
+          <el-select v-model="dataForm.catTwoId" placeholder="请选择">
+            <el-option label="2" value="1"></el-option>
+            <el-option label="3" value="2"></el-option>
+            <el-option label="4" value="3"></el-option>
+          </el-select>
+        </template>
       </el-form-item>
 
       <el-form-item label="商品介绍" prop="goodsIntroduce">
@@ -51,8 +64,7 @@
               ref="myQuillEditor"
               :options="editorOption"
               :style="{ height: '200px',width: '100%' }"
-              @change="onEditorChange($event)"
-            >
+              @change="onEditorChange($event)">
             </quill-editor>
           </div>
         </template>
@@ -99,6 +111,13 @@
   width: 178px;
   height: 178px;
   display: block;
+}
+
+.el-select  {
+  width: 130px;
+}
+.el-select {
+  background-color: #fff;
 }
 </style>
 
