@@ -17,7 +17,7 @@
       <el-row>
         <el-col :span="6" class="table-cell" style="color: #00a0e9">{{dataForm.orderId}}</el-col>
         <el-col :span="6" class="table-cell" style="color: #00a0e9">{{dataForm.orderState}}</el-col>
-        <el-col :span="6" class="table-cell" style="color: #00a0e9">{{dataForm.orderAmount}}</el-col>
+        <el-col :span="6" class="total-price" style="color: #00a0e9">{{dataForm.orderAmount}}</el-col>
         <el-col :span="6" class="table-cell" style="color: #00a0e9">{{dataForm.payWay}}</el-col>
       </el-row>
       <el-row>
@@ -68,6 +68,7 @@
         label="商品单价">
       </el-table-column>
 
+
     </el-table>
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm">
 
@@ -110,6 +111,21 @@ export default {
         this.$refs['dataForm'].resetFields()
         if (this.dataForm.orderId) {
           this.$http({
+            url: this.$http.adornUrl(`/shop/orderitem/list/`),
+            method: 'get',
+            params: this.$http.adornParams({
+              'orderId': id
+            })
+          }).then(({data}) => {
+            if (data && data.code === 0) {
+              this.dataList = data.page.list
+            } else {
+              this.dataList = []
+            }
+            this.total()
+            this.dataListLoading = false
+          })
+          this.$http({
             url: this.$http.adornUrl(`/shop/orders/info/${this.dataForm.orderId}`),
             method: 'get',
             params: this.$http.adornParams()
@@ -123,24 +139,15 @@ export default {
               this.dataForm.userTel = data.orders.userTel
               this.dataForm.userAddress = data.orders.userAddress
             }
-          })
-          this.$http({
-            url: this.$http.adornUrl(`/shop/orderitem/list/`),
-            method: 'get',
-            params: this.$http.adornParams({
-              'orderId': id
-            })
-          }).then(({data}) => {
-            console.log(data.page.list)
-            if (data && data.code === 0) {
-              this.dataList = data.page.list
-            } else {
-              this.dataList = []
-            }
-            this.dataListLoading = false
+            this.total()
           })
         }
       })
+    },
+    total(){
+      for (let item of this.dataList) {
+        this.dataForm.orderAmount += item.goodsPrice * item.goodsNumber
+      }
     }
   }
 }
