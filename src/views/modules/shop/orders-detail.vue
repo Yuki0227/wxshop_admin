@@ -74,7 +74,7 @@
 
     </el-form>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="visible = false">返回</el-button>
+      <el-button @click=clear>返回</el-button>
     </span>
   </el-dialog>
 </template>
@@ -122,7 +122,7 @@ export default {
             } else {
               this.dataList = []
             }
-            this.total()
+            //this.total()
             this.dataListLoading = false
           })
           this.$http({
@@ -139,15 +139,20 @@ export default {
               this.dataForm.userTel = data.orders.userTel
               this.dataForm.userAddress = data.orders.userAddress
             }
-            this.total()
+            //this.total()
           })
         }
       })
     },
-    total(){
+    total () {
       for (let item of this.dataList) {
         this.dataForm.orderAmount += item.goodsPrice * item.goodsNumber
       }
+      //this.dataForm.orderAmount = this.dataForm.orderAmount/2
+    },
+    clear () {
+      this.visible = false
+      this.dataForm.orderAmount = 0
     }
   }
 }
