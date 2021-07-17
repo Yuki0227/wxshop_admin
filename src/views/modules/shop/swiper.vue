@@ -23,12 +23,6 @@
         width="50">
       </el-table-column>
       <el-table-column
-        prop="sid"
-        header-align="center"
-        align="center"
-        label="ID">
-      </el-table-column>
-      <el-table-column
         prop="goodsId"
         header-align="center"
         align="center"

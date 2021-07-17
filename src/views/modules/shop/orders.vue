@@ -19,12 +19,6 @@
         width="50">
       </el-table-column>
       <el-table-column
-        prop="orderId"
-        header-align="center"
-        align="center"
-        label="订单id">
-      </el-table-column>
-      <el-table-column
         prop="payWay"
         header-align="center"
         align="center"

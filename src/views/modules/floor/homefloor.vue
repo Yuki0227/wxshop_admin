@@ -12,13 +12,6 @@
       @selection-change="selectionChangeHandle"
       style="width: 100%;">
       <el-table-column
-        prop="id"
-        header-align="center"
-        align="center"
-        label="ID"
-        min-width="10%">
-      </el-table-column>
-      <el-table-column
         prop="name"
         header-align="center"
         align="center"

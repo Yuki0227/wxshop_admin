@@ -13,12 +13,6 @@
       @selection-change="selectionChangeHandle"
       style="width: 100%;">
       <el-table-column
-        prop="floorId"
-        header-align="center"
-        align="center"
-        label="楼层ID">
-      </el-table-column>
-      <el-table-column
         prop="name"
         header-align="center"
         align="center"
